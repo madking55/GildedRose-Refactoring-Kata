@@ -54,19 +54,27 @@ class GildedRose
       if item.sell_in < 0
 
         if item.name == AGED_BRIE
-          if item.quality < 50
-            item.quality = item.quality + 1
-          end
+          increase_quality(item, 1)
         elsif item.name == BACKSTAGE_PASS
-          item.quality = item.quality - item.quality
+          decrease_quality(item, item.quality) # drops quality to 0 after concert
         elsif item.name == SULFURUS
 
         else
-            if item.quality > 0
-                item.quality = item.quality - 1
-            end
+          decrease_quality(item, 1)
         end
       end
+    end
+  end
+
+  def increase_quality(item, quality_raise)
+    if item.quality < 50
+      item.quality += quality_raise
+    end
+  end
+
+  def decrease_quality(item, quality_drop)
+    if item.quality > 0
+      item.quality -= quality_drop
     end
   end
 end
