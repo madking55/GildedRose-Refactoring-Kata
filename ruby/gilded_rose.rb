@@ -3,6 +3,7 @@ class GildedRose
   AGED_BRIE = 'Aged Brie'
   BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert'
   SULFURUS = 'Sulfuras, Hand of Ragnaros'
+  CONJURED = 'Conjured Mana Cake' 
 
   def initialize(items)
     @items = items
@@ -18,6 +19,8 @@ class GildedRose
         update_backstage_pass(item)
       when SULFURUS 
         update_sulfurus(item)
+      when CONJURED
+        update_conjured(item)
       else 
         update_item(item)
       end
@@ -36,6 +39,12 @@ class GildedRose
     increase_quality(item, 1) if item.sell_in < 10
     increase_quality(item, 1) if item.sell_in < 5
     decrease_quality(item, item.quality) if expired?(item) # drops quality to 0 after concert
+  end
+
+  def update_conjured(item)
+    update_sell_in(item)
+    2.times { decrease_quality(item, 1) }
+    2.times { decrease_quality(item, 1) if expired?(item) }
   end
 
   def update_sulfurus(item)
