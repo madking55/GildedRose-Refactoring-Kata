@@ -1,5 +1,9 @@
 class GildedRose
 
+  AGED_BRIE = 'Aged Brie'
+  BACKSTAGE_PASS = 'Backstage passes to a TAFKAL80ETC concert'
+  SULFURUS = 'Sulfuras, Hand of Ragnaros'
+
   def initialize(items)
     @items = items
   end
@@ -7,15 +11,14 @@ class GildedRose
   def update_quality()
     @items.each do |item|
       
-      case item.name
       # Brie 
-      when "Aged Brie" 
+      if item.name == AGED_BRIE
         if item.quality < 50
           item.quality = item.quality + 1
         end
 
       # Backstage
-      when "Backstage passes to a TAFKAL80ETC concert"
+      elsif item.name == BACKSTAGE_PASS
         if item.quality < 50
           item.quality = item.quality + 1
             if item.sell_in < 11
@@ -41,30 +44,27 @@ class GildedRose
 
 
       #  Sulfurus
-      when "Sulfuras, Hand of Ragnaros"
+      if item.name == SULFURUS
         break
-      end
-
-      # else
+      else
         item.sell_in = item.sell_in - 1
-      # end
+      end
       
       #  default item
       if item.sell_in < 0
-        if item.name != "Aged Brie"
-          if item.name != "Backstage passes to a TAFKAL80ETC concert"
-            if item.quality > 0
-              if item.name != "Sulfuras, Hand of Ragnaros"
-                item.quality = item.quality - 1
-              end
-            end
-          else
-            item.quality = item.quality - item.quality
-          end
-        else
+
+        if item.name == AGED_BRIE
           if item.quality < 50
             item.quality = item.quality + 1
           end
+        elsif item.name == BACKSTAGE_PASS
+          item.quality = item.quality - item.quality
+        elsif item.name == SULFURUS
+
+        else
+            if item.quality > 0
+                item.quality = item.quality - 1
+            end
         end
       end
     end
