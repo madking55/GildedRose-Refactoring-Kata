@@ -10,31 +10,41 @@ class GildedRose
 
   def update_quality()
     @items.each do |item|
-
-      if item.name != SULFURUS
-        item.sell_in = item.sell_in - 1
-      end
-
       case item.name
       when AGED_BRIE
-        increase_quality(item, 1)
-        increase_quality(item, 1) if expired?(item)
+        update_aged_brie(item)
       when BACKSTAGE_PASS
-        increase_quality(item, 1)
-            if item.sell_in < 10
-              increase_quality(item, 1)
-            end
-            if item.sell_in < 5
-              increase_quality(item, 1)
-            end
-        decrease_quality(item, item.quality) if expired?(item) # drops quality to 0 after concert
-      when SULFURUS
-        #  do nothing
+        update_backstage_pass(item)
+      when SULFURUS 
+        update_sulfurus(item)
       else 
-        decrease_quality(item, 1)
-        decrease_quality(item, 1) if expired?(item)
+        update_item(item)
       end
     end
+  end
+
+  def update_aged_brie(item)
+    item.sell_in -= 1
+    increase_quality(item, 1)
+    increase_quality(item, 1) if expired?(item)
+  end
+
+  def update_backstage_pass(item)
+    item.sell_in -= 1
+    increase_quality(item, 1)
+    increase_quality(item, 1) if item.sell_in < 10
+    increase_quality(item, 1) if item.sell_in < 5
+    decrease_quality(item, item.quality) if expired?(item) # drops quality to 0 after concert
+  end
+
+  def update_sulfurus(item)
+    # do nothing
+  end
+
+  def update_item(item)
+    item.sell_in -= 1
+    decrease_quality(item, 1)
+    decrease_quality(item, 1) if expired?(item) 
   end
 
   def expired?(item)
@@ -48,8 +58,6 @@ class GildedRose
   def decrease_quality(item, quality_drop)
     item.quality -= quality_drop if item.quality > 0
   end
-
-  
 end
 
 class Item
