@@ -33,9 +33,7 @@ class GildedRose
 
 
       #  Sulfurus
-      if item.name == SULFURUS
-        break
-      else
+      if item.name != SULFURUS
         item.sell_in = item.sell_in - 1
       end
       
