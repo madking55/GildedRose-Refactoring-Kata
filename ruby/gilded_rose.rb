@@ -13,32 +13,21 @@ class GildedRose
       
       # Brie 
       if item.name == AGED_BRIE
-        if item.quality < 50
-          item.quality = item.quality + 1
-        end
+        increase_quality(item, 1)
 
       # Backstage
       elsif item.name == BACKSTAGE_PASS
-        if item.quality < 50
-          item.quality = item.quality + 1
+        increase_quality(item, 1)
             if item.sell_in < 11
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
+              increase_quality(item, 1)
             end
             if item.sell_in < 6
-              if item.quality < 50
-                item.quality = item.quality + 1
-              end
+              increase_quality(item, 1)
             end
-        end
-
 
       # Sulfurus and default 
       else 
-        if item.quality > 0
-          item.quality = item.quality - 1 
-        end
+        decrease_quality(item, 1)
       end
 
 
@@ -77,6 +66,8 @@ class GildedRose
       item.quality -= quality_drop
     end
   end
+
+  
 end
 
 class Item
