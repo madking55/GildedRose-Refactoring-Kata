@@ -18,6 +18,7 @@ class GildedRose
       case item.name
       when AGED_BRIE
         increase_quality(item, 1)
+        increase_quality(item, 1) if expired?(item)
       when BACKSTAGE_PASS
         increase_quality(item, 1)
             if item.sell_in < 10
@@ -26,22 +27,12 @@ class GildedRose
             if item.sell_in < 5
               increase_quality(item, 1)
             end
+        decrease_quality(item, item.quality) if expired?(item) # drops quality to 0 after concert
       when SULFURUS
         #  do nothing
       else 
         decrease_quality(item, 1)
-      end
-
-      #  default item
-      if expired?(item)
-        if item.name == AGED_BRIE
-          increase_quality(item, 1)
-        elsif item.name == BACKSTAGE_PASS
-          decrease_quality(item, item.quality) # drops quality to 0 after concert
-        elsif item.name == SULFURUS
-        else
-          decrease_quality(item, 1)
-        end
+        decrease_quality(item, 1) if expired?(item)
       end
     end
   end
