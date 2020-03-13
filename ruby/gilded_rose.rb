@@ -35,16 +35,21 @@ class GildedRose
 
   def update_backstage_pass(item)
     update_sell_in(item)
-    increase_quality(item, 1)
-    increase_quality(item, 1) if item.sell_in < 10
-    increase_quality(item, 1) if item.sell_in < 5
-    decrease_quality(item, item.quality) if expired?(item) # drops quality to 0 after concert
+
+    if item.sell_in >= 10
+      increase_quality(item, 1)
+    elsif item.sell_in >= 5
+      increase_quality(item, 2) 
+    elsif item.sell_in < 5 && !expired?(item)
+      increase_quality(item, 3)
+    elsif expired?(item)
+      decrease_quality(item, item.quality) 
+    end
   end
 
   def update_conjured(item)
     update_sell_in(item)
-    2.times { decrease_quality(item, 1) }
-    2.times { decrease_quality(item, 1) if expired?(item) }
+    expired?(item) ? decrease_quality(item, 4) : decrease_quality(item, 2)
   end
 
   def update_sulfurus(item)
@@ -53,8 +58,7 @@ class GildedRose
 
   def update_item(item)
     update_sell_in(item)
-    decrease_quality(item, 1)
-    decrease_quality(item, 1) if expired?(item) 
+    expired?(item) ? decrease_quality(item, 2) : decrease_quality(item, 1)
   end
 
   def update_sell_in(item)
@@ -66,11 +70,13 @@ class GildedRose
   end
 
   def increase_quality(item, quality_raise)
-    item.quality += quality_raise if item.quality < 50
+      item.quality += quality_raise 
+      item.quality = 50 if item.quality > 50 
   end
 
   def decrease_quality(item, quality_drop)
-    item.quality -= quality_drop if item.quality > 0
+    item.quality -= quality_drop
+    item.quality = 0 if item.quality <= 0
   end
 end
 
