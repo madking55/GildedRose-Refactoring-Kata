@@ -18,7 +18,7 @@ class GildedRose
       when BACKSTAGE_PASS
         update_backstage_pass(item)
       when SULFURUS 
-        update_sulfurus(item)
+        # do nothing
       when CONJURED
         update_conjured(item)
       else 
@@ -52,13 +52,8 @@ class GildedRose
     expired?(item) ? decrease_quality(item, 4) : decrease_quality(item, 2)
   end
 
-  def update_sulfurus(item)
-    # do nothing
-  end
-
-  # def update_item(item)
-  #   update_sell_in(item)
-  #   expired?(item) ? decrease_quality(item, 2) : decrease_quality(item, 1)
+  # def update_sulfurus(item)
+  #   # do nothing
   # end
 
   def update_sell_in(item)
@@ -119,4 +114,6 @@ class ItemUpdater
   end
 end
 
+class Sulfuras
+end
 
