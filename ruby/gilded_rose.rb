@@ -22,7 +22,7 @@ class GildedRose
       when CONJURED
         update_conjured(item)
       else 
-        update_item(item)
+        ItemUpdater.update_item(item)
       end
     end
   end
@@ -56,10 +56,10 @@ class GildedRose
     # do nothing
   end
 
-  def update_item(item)
-    update_sell_in(item)
-    expired?(item) ? decrease_quality(item, 2) : decrease_quality(item, 1)
-  end
+  # def update_item(item)
+  #   update_sell_in(item)
+  #   expired?(item) ? decrease_quality(item, 2) : decrease_quality(item, 1)
+  # end
 
   def update_sell_in(item)
     item.sell_in -= 1
@@ -93,3 +93,30 @@ class Item
     "#{@name}, #{@sell_in}, #{@quality}"
   end
 end
+
+class ItemUpdater
+  def self.update_item(item)
+    update_sell_in(item)
+    expired?(item) ? decrease_quality(item, 2) : decrease_quality(item, 1)
+  end
+
+  def self.update_sell_in(item)
+    item.sell_in -= 1
+  end
+
+  def self.expired?(item)
+    item.sell_in < 0
+  end
+
+  def self.increase_quality(item, quality_raise)
+      item.quality += quality_raise 
+      item.quality = 50 if item.quality > 50 
+  end
+
+  def self.decrease_quality(item, quality_drop)
+    item.quality -= quality_drop
+    item.quality = 0 if item.quality <= 0
+  end
+end
+
+
