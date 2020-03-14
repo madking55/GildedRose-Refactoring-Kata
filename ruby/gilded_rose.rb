@@ -14,7 +14,7 @@ class GildedRose
       
       case item.name
       when AGED_BRIE
-        update_aged_brie(item)
+        AgedBrie.update_item(item)
       when BACKSTAGE_PASS
         update_backstage_pass(item)
       when SULFURUS 
@@ -27,11 +27,11 @@ class GildedRose
     end
   end
 
-  def update_aged_brie(item)
-    update_sell_in(item)
-    increase_quality(item, 1)
-    increase_quality(item, 1) if expired?(item)
-  end
+  # def update_aged_brie(item)
+  #   update_sell_in(item)
+  #   increase_quality(item, 1)
+  #   increase_quality(item, 1) if expired?(item)
+  # end
 
   def update_backstage_pass(item)
     update_sell_in(item)
@@ -52,10 +52,6 @@ class GildedRose
     expired?(item) ? decrease_quality(item, 4) : decrease_quality(item, 2)
   end
 
-  # def update_sulfurus(item)
-  #   # do nothing
-  # end
-
   def update_sell_in(item)
     item.sell_in -= 1
   end
@@ -65,8 +61,8 @@ class GildedRose
   end
 
   def increase_quality(item, quality_raise)
-      item.quality += quality_raise 
-      item.quality = 50 if item.quality > 50 
+    item.quality += quality_raise 
+    item.quality = 50 if item.quality > 50 
   end
 
   def decrease_quality(item, quality_drop)
@@ -104,8 +100,8 @@ class ItemUpdater
   end
 
   def self.increase_quality(item, quality_raise)
-      item.quality += quality_raise 
-      item.quality = 50 if item.quality > 50 
+    item.quality += quality_raise 
+    item.quality = 50 if item.quality > 50 
   end
 
   def self.decrease_quality(item, quality_drop)
@@ -115,5 +111,13 @@ class ItemUpdater
 end
 
 class Sulfuras
+end
+
+class AgedBrie < ItemUpdater
+  def self.update_item(item)
+    update_sell_in(item)
+    increase_quality(item, 1)
+    increase_quality(item, 1) if expired?(item)
+  end
 end
 
