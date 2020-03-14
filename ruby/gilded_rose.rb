@@ -16,58 +16,15 @@ class GildedRose
       when AGED_BRIE
         AgedBrie.update_item(item)
       when BACKSTAGE_PASS
-        update_backstage_pass(item)
+        Backstage.update_item(item)
       when SULFURUS 
         # do nothing
       when CONJURED
-        update_conjured(item)
+        Conjured.update_item(item)
       else 
         ItemUpdater.update_item(item)
       end
     end
-  end
-
-  # def update_aged_brie(item)
-  #   update_sell_in(item)
-  #   increase_quality(item, 1)
-  #   increase_quality(item, 1) if expired?(item)
-  # end
-
-  def update_backstage_pass(item)
-    update_sell_in(item)
-
-    if item.sell_in >= 10
-      increase_quality(item, 1)
-    elsif item.sell_in >= 5
-      increase_quality(item, 2) 
-    elsif item.sell_in < 5 && !expired?(item)
-      increase_quality(item, 3)
-    elsif expired?(item)
-      decrease_quality(item, item.quality) 
-    end
-  end
-
-  def update_conjured(item)
-    update_sell_in(item)
-    expired?(item) ? decrease_quality(item, 4) : decrease_quality(item, 2)
-  end
-
-  def update_sell_in(item)
-    item.sell_in -= 1
-  end
-
-  def expired?(item)
-    item.sell_in < 0
-  end
-
-  def increase_quality(item, quality_raise)
-    item.quality += quality_raise 
-    item.quality = 50 if item.quality > 50 
-  end
-
-  def decrease_quality(item, quality_drop)
-    item.quality -= quality_drop
-    item.quality = 0 if item.quality <= 0
   end
 end
 
@@ -121,3 +78,25 @@ class AgedBrie < ItemUpdater
   end
 end
 
+class Conjured < ItemUpdater
+  def self.update_item(item)
+    update_sell_in(item)
+    expired?(item) ? decrease_quality(item, 4) : decrease_quality(item, 2)
+  end
+end
+
+class Backstage < ItemUpdater
+  def self.update_item(item)
+    update_sell_in(item)
+
+    if item.sell_in >= 10
+      increase_quality(item, 1)
+    elsif item.sell_in >= 5
+      increase_quality(item, 2) 
+    elsif item.sell_in < 5 && !expired?(item)
+      increase_quality(item, 3)
+    elsif expired?(item)
+      decrease_quality(item, item.quality) 
+    end
+  end
+end
