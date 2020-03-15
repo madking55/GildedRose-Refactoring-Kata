@@ -11,18 +11,19 @@ class GildedRose
 
   def update_quality()
     @items.each do |item|
-      
+      ItemUpdater.update_sell_in(item) if item.name != SULFURUS
+
       case item.name
       when AGED_BRIE
-        AgedBrie.update_item(item)
+        AgedBrie.update_quality(item)
       when BACKSTAGE_PASS
-        Backstage.update_item(item)
+        Backstage.update_quality(item)
       when SULFURUS 
         # do nothing
       when CONJURED
-        Conjured.update_item(item)
+        Conjured.update_quality(item)
       else 
-        ItemUpdater.update_item(item)
+        ItemUpdater.update_quality(item)
       end
     end
   end
@@ -43,8 +44,8 @@ class Item
 end
 
 class ItemUpdater
-  def self.update_item(item)
-    update_sell_in(item)
+
+  def self.update_quality(item)
     expired?(item) ? decrease_quality(item, 2) : decrease_quality(item, 1)
   end
 
@@ -71,24 +72,19 @@ class Sulfuras
 end
 
 class AgedBrie < ItemUpdater
-  def self.update_item(item)
-    update_sell_in(item)
-    increase_quality(item, 1)
-    increase_quality(item, 1) if expired?(item)
+  def self.update_quality(item)
+    expired?(item) ? increase_quality(item, 2) : increase_quality(item, 1)
   end
 end
 
 class Conjured < ItemUpdater
-  def self.update_item(item)
-    update_sell_in(item)
+  def self.update_quality(item)
     expired?(item) ? decrease_quality(item, 4) : decrease_quality(item, 2)
   end
 end
 
 class Backstage < ItemUpdater
-  def self.update_item(item)
-    update_sell_in(item)
-
+  def self.update_quality(item)
     if item.sell_in >= 10
       increase_quality(item, 1)
     elsif item.sell_in >= 5
